@@ -145,10 +145,13 @@
                 const [description, arm, type] = station;
                 const stationNumber = index + 1;
 
+                // Add data attribute for mobile card view
+                row.setAttribute('data-station', `Station ${stationNumber}`);
+
                 row.innerHTML = `
-                    <td>${stationNumber}</td>
-                    <td class="station-desc">${description}</td>
-                    <td>
+                    <td data-label="#">${stationNumber}</td>
+                    <td class="station-desc" data-label="Station">${description}</td>
+                    <td data-label="Weight">
                         <input type="number"
                                id="weight_${stationNumber}"
                                class="weight-input"
@@ -157,7 +160,7 @@
                                onchange="validateWeightInput(${stationNumber}); saveData(); recalculate()"
                                oninput="validateWeightInput(${stationNumber}); saveData(); recalculate()">
                     </td>
-                    <td>
+                    <td data-label="Arm">
                         <input type="number"
                                id="arm_${stationNumber}"
                                value="${arm}"
@@ -165,7 +168,7 @@
                                onchange="recalculate()"
                                oninput="recalculate()">
                     </td>
-                    <td class="moment-cell" id="moment_${stationNumber}">0.00</td>
+                    <td class="moment-cell" id="moment_${stationNumber}" data-label="Moment">0.00</td>
                 `;
 
                 tbody.appendChild(row);

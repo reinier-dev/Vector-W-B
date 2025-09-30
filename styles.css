@@ -1252,86 +1252,136 @@
                 font-size: 13px;
             }
 
-            /* Table optimization for mobile */
+            /* Mobile Card Layout - Hide table, show cards */
             .table-container {
-                padding: 5px;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                position: relative;
-            }
-
-            /* Add scroll indicator */
-            .table-container::after {
-                content: '← Scroll →';
-                position: absolute;
-                bottom: 10px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(255, 159, 10, 0.9);
-                color: white;
-                padding: 4px 12px;
-                border-radius: 20px;
-                font-size: 10px;
-                font-weight: bold;
-                pointer-events: none;
-                opacity: 0.8;
-                animation: fadeInOut 3s ease-in-out infinite;
-            }
-
-            @keyframes fadeInOut {
-                0%, 100% { opacity: 0.8; }
-                50% { opacity: 0.3; }
+                padding: 10px;
+                overflow: visible;
             }
 
             table {
-                font-size: 10px;
-                min-width: 600px;
-                table-layout: auto;
+                display: none;
             }
 
-            th, td {
-                padding: 10px 6px;
-                white-space: nowrap;
+            /* Mobile Card View */
+            .table-container::before {
+                content: 'Weight & Balance Stations';
+                display: block;
+                font-size: 16px;
+                font-weight: 600;
+                margin-bottom: 15px;
+                text-align: center;
+                color: #FF9F0A;
             }
 
-            .station-desc {
-                padding-left: 8px;
-                font-size: 10px;
-                max-width: 120px;
+            tbody {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            tbody tr {
+                display: flex;
+                flex-direction: column;
+                background: rgba(10, 106, 140, 0.15);
+                border: 2px solid rgba(255, 159, 10, 0.3);
+                border-radius: 12px;
+                padding: 15px;
+                gap: 10px;
+                position: relative;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            body.light-mode tbody tr {
+                background: rgba(255, 255, 255, 0.6);
+                border-color: rgba(10, 106, 140, 0.3);
+            }
+
+            tbody tr::before {
+                content: '';
+                display: none;
+            }
+
+            tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border: none;
+                font-size: 14px;
+            }
+
+            tbody td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.8);
+                min-width: 100px;
+            }
+
+            body.light-mode tbody td::before {
+                color: rgba(0, 0, 0, 0.7);
+            }
+
+            tbody td:first-child {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                width: auto;
+                background: rgba(255, 159, 10, 0.2);
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: bold;
+            }
+
+            tbody td:first-child::before {
+                content: '#';
+                min-width: auto;
+                margin-right: 4px;
+            }
+
+            tbody td:nth-child(2) {
+                order: -1;
+                font-size: 16px;
+                font-weight: 700;
+                padding: 0 0 10px 0;
+                margin-bottom: 10px;
+                border-bottom: 2px solid rgba(255, 159, 10, 0.3);
+                color: #FF9F0A;
+            }
+
+            body.light-mode tbody td:nth-child(2) {
+                color: #0A6A8C;
+                border-bottom-color: rgba(10, 106, 140, 0.3);
+            }
+
+            tbody td:nth-child(2)::before {
+                content: '';
+                display: none;
+            }
+
+            tbody td.station-desc {
+                padding: 0 0 10px 0;
                 white-space: normal;
                 word-wrap: break-word;
+                justify-content: flex-start;
             }
 
-            th:first-child,
-            td:first-child {
-                position: sticky;
-                left: 0;
-                background: rgba(28, 28, 30, 0.95);
-                z-index: 2;
+            tbody input[type="number"] {
+                width: 120px;
+                padding: 10px 12px;
+                font-size: 16px;
+                border-radius: 8px;
+                text-align: right;
             }
 
-            body.light-mode th:first-child,
-            body.light-mode td:first-child {
-                background: rgba(255, 255, 255, 0.95);
+            tbody .moment-cell {
+                font-weight: 600;
+                font-size: 15px;
             }
 
-            th:nth-child(2),
-            td:nth-child(2) {
-                position: sticky;
-                left: 30px;
-                background: rgba(28, 28, 30, 0.95);
-                z-index: 2;
-            }
-
-            body.light-mode th:nth-child(2),
-            body.light-mode td:nth-child(2) {
-                background: rgba(255, 255, 255, 0.95);
-            }
-
-            input[type="number"] {
-                width: 65px;
-                padding: 8px 4px;
-                font-size: 14px;
+            /* Hide table header */
+            thead {
+                display: none;
             }
 
             /* Summary boxes in single column */
