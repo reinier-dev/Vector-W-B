@@ -139,13 +139,22 @@ Fuel consumption follows the configured tank priority order, allowing precise CG
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
+Contributions are welcome! This project uses **Git Flow** for branch management.
 
+Please read our [Contributing Guidelines](CONTRIBUTING.md) for detailed information about:
+- Git Flow workflow
+- Branch naming conventions
+- Commit message guidelines
+- Pull request process
+- Code style guidelines
+
+Quick start:
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch using Git Flow: `git flow feature start feature-name`
+3. Make your changes and commit: `git commit -m 'feat: add amazing feature'`
+4. Finish the feature: `git flow feature finish feature-name`
+5. Push to develop: `git push origin develop`
+6. Open a Pull Request to the `develop` branch
 
 ## Roadmap
 
