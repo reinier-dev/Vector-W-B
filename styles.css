@@ -1254,29 +1254,84 @@
 
             /* Table optimization for mobile */
             .table-container {
-                padding: 10px;
+                padding: 5px;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                position: relative;
+            }
+
+            /* Add scroll indicator */
+            .table-container::after {
+                content: '← Scroll →';
+                position: absolute;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 159, 10, 0.9);
+                color: white;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 10px;
+                font-weight: bold;
+                pointer-events: none;
+                opacity: 0.8;
+                animation: fadeInOut 3s ease-in-out infinite;
+            }
+
+            @keyframes fadeInOut {
+                0%, 100% { opacity: 0.8; }
+                50% { opacity: 0.3; }
             }
 
             table {
-                font-size: 11px;
-                min-width: 500px;
+                font-size: 10px;
+                min-width: 600px;
+                table-layout: auto;
             }
 
             th, td {
-                padding: 8px 4px;
+                padding: 10px 6px;
+                white-space: nowrap;
             }
 
             .station-desc {
                 padding-left: 8px;
-                font-size: 11px;
+                font-size: 10px;
+                max-width: 120px;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+
+            th:first-child,
+            td:first-child {
+                position: sticky;
+                left: 0;
+                background: rgba(28, 28, 30, 0.95);
+                z-index: 2;
+            }
+
+            body.light-mode th:first-child,
+            body.light-mode td:first-child {
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            th:nth-child(2),
+            td:nth-child(2) {
+                position: sticky;
+                left: 30px;
+                background: rgba(28, 28, 30, 0.95);
+                z-index: 2;
+            }
+
+            body.light-mode th:nth-child(2),
+            body.light-mode td:nth-child(2) {
+                background: rgba(255, 255, 255, 0.95);
             }
 
             input[type="number"] {
-                width: 70px;
-                padding: 6px 4px;
-                font-size: 12px;
+                width: 65px;
+                padding: 8px 4px;
+                font-size: 14px;
             }
 
             /* Summary boxes in single column */
@@ -1461,12 +1516,18 @@
             }
 
             table {
-                font-size: 10px;
+                font-size: 9px;
+                min-width: 550px;
+            }
+
+            th, td {
+                padding: 8px 4px;
             }
 
             input[type="number"] {
-                width: 60px;
-                font-size: 11px;
+                width: 55px;
+                font-size: 13px;
+                padding: 6px 3px;
             }
 
             button {
@@ -1481,5 +1542,42 @@
             .total-value,
             .fuel-total-value {
                 font-size: 15px;
+            }
+
+            th:nth-child(2),
+            td:nth-child(2) {
+                left: 25px;
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-width: 812px) and (max-height: 450px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .table-container {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+
+            #envelopeCanvas {
+                height: 150px;
+            }
+
+            .summary-box {
+                padding: 10px;
             }
         }
