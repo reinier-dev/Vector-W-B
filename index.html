@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Weight & Balance - Form F</title>
+    <link rel="stylesheet" href="styles.css?v=1759198934">
+</head>
+<body>
+<div class="container">
+        <div class="header">
+            <h1>Weight & Balance – Form F</h1>
+            <div class="controls">
+                <div class="profile-controls">
+                    <select id="aircraftProfileSelect" onchange="loadAircraftProfile()">
+                        <option value="">Select Aircraft Profile</option>
+                    </select>
+                    <button class="btn-config" onclick="openProfileModal()">Manage Profiles</button>
+                </div>
+                <div>
+                    <label class="switch">
+                        <input type="checkbox" id="unitSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="switch-label">Metric (kg/m)</span>
+                </div>
+                <div>
+                    <label class="switch">
+                        <input type="checkbox" id="themeSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="switch-label">Light mode</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAC Configuration Section -->
+        <div class="mac-toggle" id="macToggle" onclick="toggleMacConfig()">
+            <span><strong>%MAC Configuration</strong></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+
+        <div class="mac-config" id="macConfig">
+            <div class="mac-field" style="grid-column: 1 / -1;">
+                <label for="macFormula">Custom %MAC Formula:</label>
+                <input type="text"
+                       id="macFormula"
+                       value="20 + ((CG - 232.28) / 86.22) * 100"
+                       placeholder="Enter formula using 'CG' as variable. Ex: 20 + ((CG - 232.28) / 86.22) * 100"
+                       onchange="validateAndUpdateFormula()"
+                       oninput="validateAndUpdateFormula()"
+                       style="width: 100%; font-family: 'Courier New', monospace; font-size: 14px; padding: 12px;">
+            </div>
+
+            <div class="mac-field">
+                <label for="macMin">MAC Min (%):</label>
+                <input type="number" id="macMin" value="16" step="0.01" onchange="updateMacLimits()" oninput="updateMacLimits()">
+            </div>
+            <div class="mac-field">
+                <label for="macMax">MAC Max (%):</label>
+                <input type="number" id="macMax" value="30" step="0.01" onchange="updateMacLimits()" oninput="updateMacLimits()">
+            </div>
+            <div class="mac-field">
+                <button class="btn-config" onclick="resetMacDefaults()">Reset Default</button>
+            </div>
+            <div class="mac-field">
+                <button class="btn-config" onclick="testFormula()">Test Formula</button>
+            </div>
+
+            <div class="mac-formula">
+                <h4>Formula Information:</h4>
+                <div class="mac-formula-text" id="macFormulaDisplay">
+                    Current: %MAC = 20 + ((CG - 232.28) / 86.22) × 100
+                </div>
+                <p><strong>Valid range:</strong> <span id="macRangeDisplay">16% ≤ %MAC ≤ 30%</span></p>
+                <p><strong>Instructions:</strong> Use 'CG' as the variable for Center of Gravity. Standard math operators: +, -, *, /, (, )</p>
+                <div id="formulaStatus" style="margin-top: 10px; padding: 8px; border-radius: 5px; font-weight: bold;"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="table-container">
+                <table id="stationTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Station</th>
+                            <th id="weightHeader">Weight (lb)</th>
+                            <th id="armHeader">Arm (in)</th>
+                            <th id="momentHeader">Moment/100 (lb·in)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stationTableBody">
+                        <!-- Stations will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="summary-container">
+                <div class="summary-box">
+                    <div class="summary-title">Zero Fuel</div>
+                    <div class="summary-weight" id="zfwWeight">W: 0 lb</div>
+                    <div class="summary-cg" id="zfwCG">CG: 0.000 in | %MAC: 0.00%</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-title">Take-off</div>
+                    <div class="summary-weight" id="towWeight">W: 0 lb</div>
+                    <div class="summary-cg" id="towCG">CG: 0.000 in | %MAC: 0.00%</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-title">Landing</div>
+                    <div class="summary-weight" id="ldwWeight">W: 0 lb</div>
+                    <div class="summary-cg" id="ldwCG">CG: 0.000 in | %MAC: 0.00%</div>
+                </div>
+                <div class="envelope-graph-container">
+                    <div class="summary-title">CG Envelope Graph</div>
+                    <canvas id="envelopeCanvas" width="300" height="200"></canvas>
+                    <div class="graph-controls">
+                        <button class="btn-secondary btn-small" onclick="toggleEnvelopeView()">Toggle View</button>
+                        <button class="btn-secondary btn-small" onclick="resetEnvelopeZoom()">Reset Zoom</button>
+                        <button class="btn-secondary btn-small" onclick="centerOnPoints()">Center on Data</button>
+                        <button class="btn-secondary btn-small" onclick="toggleFlightPath()">Flight Path</button>
+                    </div>
+                    <div class="graph-info">
+                        Hover over points for details • Scroll to zoom • Drag to pan
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="totals">
+            <div class="total-item">
+                <div class="total-label">Total Weight</div>
+                <div class="total-value" id="totalWeight">0 lb</div>
+            </div>
+            <div class="total-item">
+                <div class="total-label">Total Moment</div>
+                <div class="total-value" id="totalMoment">0.00</div>
+            </div>
+            <div class="total-item">
+                <div class="total-label">Total ARM</div>
+                <div class="total-value" id="totalArm">0.00 in</div>
+            </div>
+        </div>
+
+        <div class="fuel-totals">
+            <div class="fuel-totals-header">
+                <span>⛽ Fuel Totals</span>
+            </div>
+            <div class="fuel-totals-grid">
+                <div class="fuel-total-item">
+                    <div class="fuel-total-label">Total Fuel Weight</div>
+                    <div class="fuel-total-value" id="totalFuelWeight">0 lb</div>
+                </div>
+                <div class="fuel-total-item">
+                    <div class="fuel-total-label">Total Fuel Moment</div>
+                    <div class="fuel-total-value" id="totalFuelMoment">0.00</div>
+                </div>
+                <div class="fuel-total-item">
+                    <div class="fuel-total-label">Total Fuel ARM</div>
+                    <div class="fuel-total-value" id="totalFuelArm">0.00 in</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <div class="btn-group">
+                <button class="btn-secondary" onclick="clearAll()">Clear</button>
+                <button class="btn-secondary" onclick="clearSavedData()">Clear Saved Data</button>
+                <button class="btn-config" onclick="openCargoModal()">Manage Cargo</button>
+                <button class="btn-config" onclick="openFuelModal()">Fuel Sequence</button>
+                <button class="btn-danger" onclick="window.close()">Exit</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="openHistoryModal()">View History</button>
+                <button class="btn-primary" onclick="saveCalculation()">Save Calculation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryModal()">&times;</span>
+            <h2>Calculation History</h2>
+            <button class="btn-primary" onclick="exportHistoryToPDF()" style="margin: 10px 0;">Export to PDF</button>
+            <div id="historyContent">
+                <p>No saved calculations.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aircraft Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProfileModal()">&times;</span>
+            <h2>Aircraft Profile Management</h2>
+
+            <div class="profile-section">
+                <h3>Create New Profile</h3>
+                <div class="profile-form">
+                    <div class="profile-field">
+                        <label for="profileName">Profile Name:</label>
+                        <input type="text" id="profileName" placeholder="e.g., Cessna 172N">
+                    </div>
+                    <div class="profile-field">
+                        <label for="profileDescription">Description:</label>
+                        <input type="text" id="profileDescription" placeholder="e.g., Standard configuration with dual controls">
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn-primary" onclick="saveCurrentAsProfile()">Save Current Configuration</button>
+                        <button class="btn-secondary" onclick="loadTemplate()">Load from Template</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Saved Profiles</h3>
+                <div id="profileList">
+                    <p>No saved profiles.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargo Management Modal -->
+    <div id="cargoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCargoModal()">&times;</span>
+            <h2>Cargo Management</h2>
+
+            <div class="cargo-section">
+                <h3>Station Name Editor</h3>
+                <div class="station-editor">
+                    <div class="station-field">
+                        <label>Station 8 (Cargo):</label>
+                        <input type="text" id="station8Name" placeholder="Enter station name">
+                    </div>
+                    <div class="station-field">
+                        <label>Station 9 (Other):</label>
+                        <input type="text" id="station9Name" placeholder="Enter station name">
+                    </div>
+                    <div class="station-field">
+                        <label>Station 10 (Other):</label>
+                        <input type="text" id="station10Name" placeholder="Enter station name">
+                    </div>
+                    <div class="station-actions">
+                        <button class="btn-secondary" onclick="resetStationNames()">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="acceptCargoChanges()">Accept Changes</button>
+                <button class="btn-secondary" onclick="closeCargoModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fuel Consumption Sequence Modal -->
+    <div id="fuelModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFuelModal()">&times;</span>
+            <h2>Fuel Consumption Sequence</h2>
+
+            <div class="fuel-section">
+                <h3>Flight Planning</h3>
+                <div class="fuel-planning">
+                    <div class="fuel-field">
+                        <label for="flightTime">Estimated Flight Time (hours):</label>
+                        <input type="number" id="flightTime" step="0.1" min="0">
+                    </div>
+                    <div class="fuel-field">
+                        <label for="fuelBurnRate">Fuel Burn Rate (per hour):</label>
+                        <input type="number" id="fuelBurnRate" step="0.1" min="0">
+                    </div>
+                    <div class="fuel-field">
+                        <label for="reserveFuel">Reserve Fuel:</label>
+                        <input type="number" id="reserveFuel" step="0.1" min="0">
+                    </div>
+                    <div class="fuel-actions">
+                        <button class="btn-primary" onclick="calculateFuelConsumption()">Calculate Sequence</button>
+                        <button class="btn-secondary" onclick="simulateFuelBurn()">Simulate Flight</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fuel-section">
+                <h3>Fuel Tank Priorities</h3>
+                <p>Drag and drop to reorder fuel consumption priority:</p>
+                <div id="fuelTanksList" class="fuel-tanks-list">
+                    <!-- Fuel tanks will be populated here -->
+                </div>
+                <div class="fuel-actions">
+                    <button class="btn-secondary" onclick="resetFuelPriorities()">Reset to Default</button>
+                </div>
+            </div>
+
+            <div class="fuel-section">
+                <h3>CG Travel During Flight</h3>
+                <div id="fuelSequenceResults">
+                    <p>Configure fuel consumption above to see CG travel analysis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js?v=1759198934"></script>
+    <script>
+        // Initialize the application when the page loads
+        if (window.addEventListener) {
+            window.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM loaded, initializing app...');
+                if (typeof init === 'function') {
+                    init();
+                } else {
+                    console.error('Init function not found!');
+                }
+            });
+        } else if (window.attachEvent) {
+            // IE8 support
+            window.attachEvent('onload', function() {
+                console.log('DOM loaded (IE), initializing app...');
+                if (typeof init === 'function') {
+                    init();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
