@@ -236,11 +236,32 @@
             padding: 20px;
             overflow-x: auto;
             border: 1px solid rgba(255, 159, 10, 0.15);
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
 
         body.light-mode .table-container {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* Scrollbar styling for webkit browsers */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 159, 10, 0.5);
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 159, 10, 0.7);
         }
 
         table {
@@ -636,6 +657,60 @@
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Touch-friendly tap targets */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px;
+                padding: 14px 24px;
+            }
+
+            input[type="number"] {
+                min-height: 44px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .mac-field input {
+                min-height: 44px;
+                font-size: 16px;
+            }
+
+            select {
+                min-height: 44px;
+                font-size: 16px;
+            }
+
+            .switch {
+                width: 70px;
+                height: 40px;
+            }
+
+            .slider:before {
+                height: 32px;
+                width: 32px;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(30px);
+                -moz-transform: translateX(30px);
+                -ms-transform: translateX(30px);
+                -o-transform: translateX(30px);
+                transform: translateX(30px);
+            }
+
+            button:hover {
+                transform: none;
+            }
+
+            button:active {
+                opacity: 0.8;
+            }
         }
 
         .modal {
@@ -1092,63 +1167,319 @@
             color: rgba(0, 0, 0, 0.6);
         }
 
+        /* Tablet breakpoint */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .summary-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .envelope-graph-container {
+                grid-column: 1 / -1;
+            }
+
+            #envelopeCanvas {
+                height: 250px;
+            }
+
+            .mac-config {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Mobile breakpoint */
         @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                border-radius: 12px;
+            }
+
             .header {
                 flex-direction: column;
                 text-align: center;
+                gap: 10px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+                width: 100%;
             }
 
             .controls {
                 justify-content: center;
+                width: 100%;
+                flex-direction: column;
             }
 
-            .profile-form {
+            .profile-controls {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            #aircraftProfileSelect {
+                min-width: 100%;
+            }
+
+            .btn-config,
+            button {
+                width: 100%;
+            }
+
+            .switch-label {
+                font-size: 13px;
+            }
+
+            /* Table optimization for mobile */
+            .table-container {
+                padding: 10px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                font-size: 11px;
+                min-width: 500px;
+            }
+
+            th, td {
+                padding: 8px 4px;
+            }
+
+            .station-desc {
+                padding-left: 8px;
+                font-size: 11px;
+            }
+
+            input[type="number"] {
+                width: 70px;
+                padding: 6px 4px;
+                font-size: 12px;
+            }
+
+            /* Summary boxes in single column */
+            .summary-container {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
 
-            .cargo-form {
-                grid-template-columns: 1fr;
+            .summary-box {
+                padding: 15px;
             }
 
-            .station-editor {
-                grid-template-columns: 1fr;
+            .summary-title {
+                font-size: 16px;
             }
 
-            .fuel-planning {
-                grid-template-columns: 1fr;
+            .summary-weight,
+            .summary-cg {
+                font-size: 14px;
             }
 
+            /* Canvas optimization */
+            #envelopeCanvas {
+                height: 200px;
+            }
+
+            .graph-controls {
+                justify-content: center;
+            }
+
+            .graph-controls button {
+                padding: 8px 12px;
+                font-size: 12px;
+                width: auto;
+            }
+
+            /* Totals section */
             .totals {
                 flex-direction: column;
-                gap: 15px;
+                gap: 12px;
+                padding: 15px;
             }
 
+            .total-label {
+                font-size: 14px;
+            }
+
+            .total-value {
+                font-size: 16px;
+            }
+
+            /* Fuel totals */
             .fuel-totals {
                 flex-direction: column;
+                padding: 15px;
+            }
+
+            .fuel-totals-header {
+                font-size: 16px;
             }
 
             .fuel-total-item {
                 min-width: 100%;
+                padding: 10px 0;
             }
 
+            .fuel-total-label {
+                font-size: 13px;
+            }
+
+            .fuel-total-value {
+                font-size: 18px;
+            }
+
+            /* MAC Config */
+            .mac-config {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            .mac-field label {
+                font-size: 13px;
+            }
+
+            .mac-field input {
+                font-size: 13px;
+            }
+
+            .mac-toggle {
+                padding: 12px;
+            }
+
+            /* Buttons */
             .buttons {
                 flex-direction: column;
+                gap: 12px;
             }
 
             .btn-group {
-                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            button {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            /* Modal optimization */
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+                margin: 10% auto;
+                max-height: 85vh;
+            }
+
+            .close {
+                right: 15px;
+                top: 15px;
+                font-size: 24px;
+            }
+
+            /* Profile forms */
+            .profile-form {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .profile-field input {
+                font-size: 14px;
+            }
+
+            /* Cargo forms */
+            .cargo-form {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .cargo-section {
+                padding: 15px;
+            }
+
+            /* Station editor */
+            .station-editor {
+                grid-template-columns: 1fr;
+                padding: 12px;
+            }
+
+            /* Fuel planning */
+            .fuel-planning {
+                grid-template-columns: 1fr;
+            }
+
+            .fuel-section {
+                padding: 15px;
+            }
+
+            /* Alert banner */
+            .alert-banner {
+                right: 10px;
+                top: 10px;
+                max-width: calc(100% - 20px);
+                padding: 12px 15px;
+            }
+
+            /* History table */
+            .history-table {
+                font-size: 11px;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 8px 6px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 16px;
             }
 
             table {
-                font-size: 12px;
+                font-size: 10px;
             }
 
             input[type="number"] {
-                width: 80px;
-                padding: 6px;
+                width: 60px;
+                font-size: 11px;
             }
 
-            .mac-config {
-                grid-template-columns: 1fr;
+            button {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .summary-title {
+                font-size: 15px;
+            }
+
+            .total-value,
+            .fuel-total-value {
+                font-size: 15px;
             }
         }
