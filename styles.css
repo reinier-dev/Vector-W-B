@@ -12,12 +12,19 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #003D5B 0%, #0A6A8C 50%, #1C1C1E 100%);
             min-height: 100vh;
             padding: 20px;
             transition: all 0.3s ease;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body.light-mode {
@@ -27,6 +34,7 @@
 
         .container {
             max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
             background: rgba(28, 28, 30, 0.85);
             -webkit-backdrop-filter: blur(20px);
@@ -37,6 +45,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             color: #F2F2F7;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: hidden;
         }
 
         body.light-mode .container {
@@ -1186,6 +1195,8 @@
                 grid-template-columns: 1fr;
                 gap: 15px;
                 margin-bottom: 15px;
+                width: 100%;
+                max-width: 100%;
             }
 
             .summary-container {
@@ -1216,6 +1227,8 @@
             .container {
                 padding: 10px;
                 border-radius: 10px;
+                width: calc(100% - 16px);
+                max-width: 100%;
             }
 
             .header {
@@ -1259,6 +1272,8 @@
             .table-container {
                 padding: 8px;
                 overflow: visible;
+                width: 100%;
+                max-width: 100%;
             }
 
             /* Hide table, show as blocks */
@@ -1280,6 +1295,7 @@
                 grid-template-columns: 1fr;
                 gap: 10px;
                 width: 100%;
+                max-width: 100%;
             }
 
             tbody tr {
@@ -1291,6 +1307,9 @@
                 position: relative;
                 min-height: auto;
                 margin-bottom: 0;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
             }
 
             body.light-mode tbody tr {
