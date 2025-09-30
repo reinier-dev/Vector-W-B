@@ -1252,136 +1252,165 @@
                 font-size: 13px;
             }
 
-            /* Mobile Card Layout - Hide table, show cards */
+            /* Mobile Table Optimization - Keep table structure */
             .table-container {
-                padding: 10px;
-                overflow: visible;
+                padding: 8px;
+                overflow-x: auto;
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+                position: relative;
+                border-radius: 12px;
+            }
+
+            /* Scroll hint indicator */
+            .table-container::after {
+                content: '⟵ Swipe to see all columns ⟶';
+                position: sticky;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: block;
+                text-align: center;
+                background: linear-gradient(135deg, rgba(255, 159, 10, 0.95), rgba(10, 106, 140, 0.95));
+                color: white;
+                padding: 8px;
+                font-size: 11px;
+                font-weight: 700;
+                border-radius: 8px;
+                margin-top: 10px;
+                z-index: 10;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             }
 
             table {
-                display: none;
+                width: 100%;
+                min-width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: 13px;
             }
 
-            /* Mobile Card View */
-            .table-container::before {
-                content: 'Weight & Balance Stations';
-                display: block;
-                font-size: 16px;
-                font-weight: 600;
-                margin-bottom: 15px;
-                text-align: center;
-                color: #FF9F0A;
+            thead {
+                position: sticky;
+                top: 0;
+                z-index: 3;
             }
 
-            tbody {
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            tbody tr {
-                display: flex;
-                flex-direction: column;
-                background: rgba(10, 106, 140, 0.15);
-                border: 2px solid rgba(255, 159, 10, 0.3);
-                border-radius: 12px;
-                padding: 15px;
-                gap: 10px;
-                position: relative;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            }
-
-            body.light-mode tbody tr {
-                background: rgba(255, 255, 255, 0.6);
-                border-color: rgba(10, 106, 140, 0.3);
-            }
-
-            tbody tr::before {
-                content: '';
-                display: none;
-            }
-
-            tbody td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px 0;
-                border: none;
-                font-size: 14px;
-            }
-
-            tbody td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: rgba(255, 255, 255, 0.8);
-                min-width: 100px;
-            }
-
-            body.light-mode tbody td::before {
-                color: rgba(0, 0, 0, 0.7);
-            }
-
-            tbody td:first-child {
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                width: auto;
-                background: rgba(255, 159, 10, 0.2);
-                padding: 4px 10px;
-                border-radius: 20px;
-                font-size: 11px;
-                font-weight: bold;
-            }
-
-            tbody td:first-child::before {
-                content: '#';
-                min-width: auto;
-                margin-right: 4px;
-            }
-
-            tbody td:nth-child(2) {
-                order: -1;
-                font-size: 16px;
+            th {
+                background: rgba(10, 106, 140, 0.95);
+                color: white;
+                padding: 12px 8px;
+                font-size: 12px;
                 font-weight: 700;
-                padding: 0 0 10px 0;
-                margin-bottom: 10px;
-                border-bottom: 2px solid rgba(255, 159, 10, 0.3);
+                text-align: center;
+                white-space: nowrap;
+                border-bottom: 3px solid #FF9F0A;
+            }
+
+            body.light-mode th {
+                background: rgba(10, 106, 140, 0.9);
+                color: white;
+            }
+
+            /* First column sticky */
+            th:first-child,
+            td:first-child {
+                position: sticky;
+                left: 0;
+                z-index: 2;
+                background: rgba(28, 28, 30, 0.98);
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            }
+
+            body.light-mode th:first-child,
+            body.light-mode td:first-child {
+                background: rgba(255, 255, 255, 0.98);
+            }
+
+            th:first-child {
+                z-index: 4;
+                background: rgba(10, 106, 140, 0.98);
+            }
+
+            td {
+                padding: 12px 8px;
+                text-align: center;
+                background: transparent;
+                font-size: 13px;
+            }
+
+            td:first-child {
+                font-weight: 700;
                 color: #FF9F0A;
+                min-width: 40px;
             }
 
-            body.light-mode tbody td:nth-child(2) {
+            body.light-mode td:first-child {
                 color: #0A6A8C;
-                border-bottom-color: rgba(10, 106, 140, 0.3);
             }
 
-            tbody td:nth-child(2)::before {
-                content: '';
-                display: none;
-            }
-
-            tbody td.station-desc {
-                padding: 0 0 10px 0;
-                white-space: normal;
-                word-wrap: break-word;
-                justify-content: flex-start;
+            .station-desc {
+                text-align: left !important;
+                padding-left: 12px !important;
+                font-weight: 600;
+                min-width: 140px;
+                max-width: 180px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             tbody input[type="number"] {
-                width: 120px;
-                padding: 10px 12px;
+                width: 90px;
+                padding: 12px 8px;
                 font-size: 16px;
+                border: 2px solid rgba(255, 159, 10, 0.3);
                 border-radius: 8px;
-                text-align: right;
+                background: rgba(255, 255, 255, 0.95);
+                color: #1C1C1E;
+                text-align: center;
+                font-weight: 600;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+
+            body.light-mode tbody input[type="number"] {
+                background: rgba(255, 255, 255, 1);
+                border-color: rgba(10, 106, 140, 0.3);
+            }
+
+            tbody input[type="number"]:focus {
+                outline: none;
+                border-color: #FF9F0A;
+                box-shadow: 0 0 0 3px rgba(255, 159, 10, 0.2);
             }
 
             tbody .moment-cell {
-                font-weight: 600;
-                font-size: 15px;
+                font-weight: 700;
+                font-size: 14px;
+                color: #FF9F0A;
+                min-width: 100px;
             }
 
-            /* Hide table header */
-            thead {
-                display: none;
+            body.light-mode tbody .moment-cell {
+                color: #0A6A8C;
+            }
+
+            /* Alternate row colors for better readability */
+            tbody tr:nth-child(odd) {
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            body.light-mode tbody tr:nth-child(odd) {
+                background: rgba(0, 0, 0, 0.02);
+            }
+
+            tbody tr:nth-child(even) {
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            body.light-mode tbody tr:nth-child(even) {
+                background: rgba(0, 0, 0, 0.04);
             }
 
             /* Summary boxes in single column */
